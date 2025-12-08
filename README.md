@@ -1,2 +1,2 @@
-# Bulk-RNAseq-Analysis---Learnings-from-Workshop
+# Bulk-RNAseq-Analysis - Learnings-from-Workshop
 Learnings from Workshop 
