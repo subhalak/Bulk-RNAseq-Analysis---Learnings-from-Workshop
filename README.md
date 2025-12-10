@@ -30,6 +30,20 @@ For this workshop, we demonstrate the workflow using a publicly accessible GEO d
 💡 Add screenshot here: (directory structure after creation)
 <!-- INSERT SCREENSHOT 2 HERE -->
 
+Contents
+
+<u>This text will be underlined.</u>
+
+<u>Introduction<u>
+
+Create Environment with Conda
+Pre-trained Model and Datasets
+Pre-Training
+Fine-tuning
+Citation
+Contact
+
+# Introduction
 
 ## Workflow diagram on Bulk RNA seq analysis
 
