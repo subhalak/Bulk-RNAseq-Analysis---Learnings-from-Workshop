@@ -225,30 +225,54 @@ Homo_sapiens.GRCh38.99.gtf.gz ← given in the tutorial; u need to download the 
 
 featureCounts -S 2 -a Homo_sapiens.GRCh38.114.gtf -o quants/featurecounts.txt sample.bam  ## to get counts for from .bam file
 
-Edit below chunk with ur directories n make it .sh file and simply run
-./script_name.sh  (this will automate estimation of counts by featurecounts taking each .bam)
-
-
-"featureCounts -S 2 -a Homo_sapiens.GRCh38.114.gtf -o quants/featurecounts.txt sample.bam"
-
 # Loop for all BAM files:
 
-"for f in $BAM/*_sorted.bam; do
-    featureCounts -T 20 -p -a $REFERENCE/Homo_sapiens.GRCh38.109.gtf -o $COUNTS/$(basename ${f%_sorted.bam})_counts.txt "$f"
-done"
+Run this ./script_name.sh file to run all 8 pairs of files to generate featurecounts
+
+./script_name.sh  (this will automate estimation of counts by featurecounts taking each .bam and .bai file)
 
 ## FINAL — Merge All Count Files
 
-"mkdir MERGED_COUNTS"
+#!/usr/bin/env python
+#coding: utf-8
 
-"awk 'NR>1 {print $1}' $COUNTS/SRR11262284_counts.txt > MERGED_COUNTS/geneids.txt"
+#In[1]:
 
-"for f in $COUNTS/*_counts.txt; do
-    sample=$(basename "$f" _counts.txt)
-    awk 'NR>1 {print $7}' "$f" > MERGED_COUNTS/${sample}_col.txt
-done"
+import os
+import glob
+import pandas as pd
+import time
 
-"paste MERGED_COUNTS/geneids.txt MERGED_COUNTS/*_col.txt > MERGED_COUNTS/merged_counts.txt"
+path = "path_to_folder_where_featurecount_output_is_stored"
+files = glob.glob(os.path.join(path, "*.txt"))
+
+print("Files found:", files)
+
+all_counts = []
+
+for file in files:
+    start_time = time.time()
+    df = pd.read_csv(file, sep="\t", comment="#")
+    
+    sample_name = os.path.basename(file).replace("_featurecounts.txt", "")
+    df = df[["Geneid", df.columns[-1]]]
+    df.rename(columns={df.columns[-1]: sample_name}, inplace=True)
+    
+    all_counts.append(df)
+    
+    elapsed = (time.time() - start_time) / 60  # minutes
+    print(f"Completed {sample_name} | Rows: {df.shape[0]} | Time: {elapsed:.2f} min")
+
+counts_matrix = all_counts[0]
+for df in all_counts[1:]:
+    counts_matrix = counts_matrix.merge(df, on="Geneid", how="outer")
+
+output_file = os.path.join(path, "GSE106305_counts_matrix_3011.csv")
+counts_matrix.to_csv(output_file, index=False)
+
+print("\All files processed!")
+print("Merged matrix shape:", counts_matrix.shape)
+print("Saved to:", output_file)
 
 # Downstream Analysis — DESeq2 in R
 
