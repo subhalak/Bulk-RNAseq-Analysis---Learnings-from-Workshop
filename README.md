@@ -27,22 +27,6 @@ Guo et al. utilize multiple publicly available and experimentally generated data
 
 For this workshop, we demonstrate the workflow using a publicly accessible GEO dataset (Accession ID: GSE106305) containing multiple RNA-seq samples across biological conditions. Raw sequencing data are downloaded via SRA Toolkit, and all files are stored in structured directories for reproducibility.
 
-💡 Add screenshot here: (directory structure after creation)
-<!-- INSERT SCREENSHOT 2 HERE -->
-
-Contents
-
-<u>This text will be underlined.</u>
-
-<u>Introduction<u>
-
-Create Environment with Conda
-Pre-trained Model and Datasets
-Pre-Training
-Fine-tuning
-Citation
-Contact
-
 # Introduction
 
 ## Workflow diagram on Bulk RNA seq analysis
