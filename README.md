@@ -201,15 +201,15 @@ paste MERGED_COUNTS/geneids.txt MERGED_COUNTS/*_col.txt > MERGED_COUNTS/merged_c
 
 # Downstream Analysis — DESeq2 in R
 
-# This section covers:
+* This section covers:
 
-# Importing count matrix
+* Importing count matrix
 
-# Running DESeq2
+* Running DESeq2
 
-# PCA / heatmap / volcano plot
+* PCA / heatmap / volcano plot
 
-# GO/KEGG enrichment
+* GO/KEGG enrichment
 
 Example (add your plots later):
 
