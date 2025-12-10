@@ -86,21 +86,21 @@ The processing pipeline includes:
 
 Before running the pipeline, create a dedicated conda environment to ensure consistent versions and reproducible results.
 
-— Install Miniconda (safe, no admin required)
+## Install Miniconda (safe, no admin required)
 
 "curl -LO https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh"
 "bash Miniconda3-latest-MacOSX-arm64.sh"
 
-- Check installation:
+## Check installation:
 
 "conda --version"
 
-- Create a new environment for the workshop
+## Create a new environment for the workshop
 
 "conda create -n rnaseq python=3.10 -y"
 "conda activate rnaseq"
 
-- Install SRA Toolkit
+## Install SRA Toolkit
 
 "conda install -c bioconda sra-tools -y"
 
