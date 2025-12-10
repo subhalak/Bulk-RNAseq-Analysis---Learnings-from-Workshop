@@ -176,35 +176,37 @@ we should see files like:
 
 If we see all 20 samples → we are READY for the workshop.
 
+# Quality Control (FastQC + MultiQC)
+
+## Step 1: Run FastQC:
+
+"fastqc fastq/*.fastq.gz -o fastqc_results/ --threads 8"
+
+This will give u html files for each of ur fastq.gz but we need one file for all samples, n for that we do multiqc
+
+## Generate summary report:
+
+"multiqc fastqc_results/ -o multiqc_report/" 
+
+For trimming, we use trimmomatic (installation of which is challenging - try installing it by ur own - hint (githubs links) and run the below command just for one sample
+
+# STEP 2 — Trimming (Trimmomatic)
+
+"java -jar Trimmomatic-0.39/trimmomatic-0.39.jar SE -threads 4 fastq/SRR7179504.fastq.gz fastq/SRR7179504_trimmed.fastq.gz TRAILING:10 -phred33"   
+
+After trimming, run FastQC again to compare metrics.
+
 # PART D — Downloading Reference Genome & Annotation Files
 
-## Download HISAT2 GRCh38 index:
+## STEP 3 — Download HISAT2 & Alignment with HISAT2 using GRCh38 index:
 
-"wget -P $REFERENCE https://genome-idx.s3.amazonaws.com/hisat/grch38_genome.tar.gz"
-"tar -xzf grch38_genome.tar.gz"
+"wget https://genome-idx.s3.amazonaws.com/hisat/grch38_genome.tar.gz"
+"tar -xvzf grch38_genome.tar.gz"
 
 ## Download GTF annotation:
 
 "wget -P $REFERENCE https://ftp.ensembl.org/pub/release-109/gtf/homo_sapiens/Homo_sapiens.GRCh38.109.gtf.gz"
 "gunzip Homo_sapiens.GRCh38.109.gtf.gz"
-
-##STEP 1 — Quality Control (FastQC + MultiQC)
-
-## Run FastQC:
-
-"fastqc $FASTQ/*_1.fastq $FASTQ/*_2.fastq -o $FASTQC_Results -t 10"
-
-## Generate summary report:
-
-"multiqc $FASTQC_Results -o $FASTQC_Results"
-
-# STEP 2 — Trimming (Trimmomatic)
-
-Example command:
-
-"trimmomatic PE input_1.fastq input_2.fastq out_1_paired.fq out_1_unpaired.fq out_2_paired.fq out_2_unpaired.fq SLIDINGWINDOW:4:20 MINLEN:36"
-
-# STEP 3 — Alignment with HISAT2
 
 ## Single sample:
 
