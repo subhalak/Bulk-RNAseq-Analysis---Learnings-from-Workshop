@@ -12,6 +12,9 @@ This repository provides a fully reproducible workflow for Bulk RNA-Seq processi
 Here, we re-process 20 RNA-seq samples publicly available under GSE106305.
 The goal: convert raw sequencing data (SRA) → FASTQ → QC → trimmed reads → aligned BAM → gene-level counts → merged count matrix → DESeq2
 
+<img width="250" height="500" alt="Workflow_diagram" src="https://github.com/user-attachments/assets/185f46cc-3350-47eb-ac63-54bf2e16a938" />
+
+
 The workflow covers the two major phases of RNA-seq analysis:
 
 # 1. Data preprocessing — converting raw sequencing reads into a count matrix
