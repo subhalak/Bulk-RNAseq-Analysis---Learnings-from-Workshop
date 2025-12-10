@@ -286,7 +286,7 @@ This section covers:
 
 * GO/KEGG enrichment
 
-# Differential Expression Analysis (DESeq2)
+## Differential Expression Analysis (DESeq2) in R
 
 Install required packages:
 
@@ -297,7 +297,8 @@ BiocManager::install("DESeq2")
 BiocManager::install("clusterProfiler")
 BiocManager::install("org.Hs.eg.db")
 
-Run - 
+Run the R script - "DESeq2_tutorial_GSE106305_Updated.Rmd" @RStudio and generate all downstream statistical analysis
+
 # End of Tutorial
 
 This README provides a full, reproducible workflow for bulk RNA-seq—from raw FASTQ files to biological interpretation of differentially expressed genes.
