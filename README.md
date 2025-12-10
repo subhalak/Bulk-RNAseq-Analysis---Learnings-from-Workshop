@@ -106,23 +106,23 @@ Before running the pipeline, create a dedicated conda environment to ensure cons
 
 ## Install all required RNA-seq tools:
 
-conda install -y -c conda-forge -c bioconda fastqc multiqc trimmomatic hisat2 samtools subread 
+"conda install -y -c conda-forge -c bioconda fastqc multiqc trimmomatic hisat2 samtools subread"
 
 ## Tools included:
 
-SRA Toolkit: command-line tools from NCBI for accessing the Sequence Read Archive (SRA) using prefetch, fastq-dump, fasterq-dump etc
+- SRA Toolkit: command-line tools from NCBI for accessing the Sequence Read Archive (SRA) using prefetch, fastq-dump, fasterq-dump etc
 
-FastQC: Assess quality of raw FASTQ reads
+- FastQC: Assess quality of raw FASTQ reads
 
-MultiQC: aggregates and summarizes output from many different analysis tools like FastQC
+- MultiQC: aggregates and summarizes output from many different analysis tools like FastQC
 
-Trimmomatic: Trim adapters & low-quality bases
+- Trimmomatic: Trim adapters & low-quality bases
 
-HISAT2: Splice-aware alignment
+- HISAT2: Splice-aware alignment
 
-SAMtools: Handle SAM/BAM files
+- SAMtools: Handle SAM/BAM files
 
-Subread (featureCounts): Gene-level quantification
+- Subread (featureCounts): Gene-level quantification
 
 # PART B — Creating Directory Structure
 
@@ -169,97 +169,91 @@ Note:
 
 "ls fastq"
 
-You should see files like:
+we should see files like:
 
-SRR7179504_1.fastq.gz
-SRR7179504_2.fastq.gz
+"SRR7179504_1.fastq.gz"
+"SRR7179504_2.fastq.gz"
 
-If you see all 20 samples → you are READY for the workshop.
+If we see all 20 samples → we are READY for the workshop.
 
 # PART D — Downloading Reference Genome & Annotation Files
 
 ## Download HISAT2 GRCh38 index:
 
-wget -P $REFERENCE https://genome-idx.s3.amazonaws.com/hisat/grch38_genome.tar.gz
-tar -xzf grch38_genome.tar.gz
+"wget -P $REFERENCE https://genome-idx.s3.amazonaws.com/hisat/grch38_genome.tar.gz"
+"tar -xzf grch38_genome.tar.gz"
 
 ## Download GTF annotation:
 
-wget -P $REFERENCE https://ftp.ensembl.org/pub/release-109/gtf/homo_sapiens/Homo_sapiens.GRCh38.109.gtf.gz
-gunzip Homo_sapiens.GRCh38.109.gtf.gz
+"wget -P $REFERENCE https://ftp.ensembl.org/pub/release-109/gtf/homo_sapiens/Homo_sapiens.GRCh38.109.gtf.gz"
+"gunzip Homo_sapiens.GRCh38.109.gtf.gz"
 
 ##STEP 1 — Quality Control (FastQC + MultiQC)
 
-# Run FastQC:
+## Run FastQC:
 
-fastqc $FASTQ/*_1.fastq $FASTQ/*_2.fastq -o $FASTQC_Results -t 10
+"fastqc $FASTQ/*_1.fastq $FASTQ/*_2.fastq -o $FASTQC_Results -t 10"
 
+## Generate summary report:
 
-# Generate summary report:
-
-multiqc $FASTQC_Results -o $FASTQC_Results
-
-
-💡 Add screenshot here: (MultiQC report example)
-<!-- INSERT SCREENSHOT 5 HERE -->
+"multiqc $FASTQC_Results -o $FASTQC_Results"
 
 # STEP 2 — Trimming (Trimmomatic)
 
 Example command:
 
-trimmomatic PE input_1.fastq input_2.fastq out_1_paired.fq out_1_unpaired.fq out_2_paired.fq out_2_unpaired.fq SLIDINGWINDOW:4:20 MINLEN:36
+"trimmomatic PE input_1.fastq input_2.fastq out_1_paired.fq out_1_unpaired.fq out_2_paired.fq out_2_unpaired.fq SLIDINGWINDOW:4:20 MINLEN:36"
 
 # STEP 3 — Alignment with HISAT2
 
-# Single sample:
+## Single sample:
 
-hisat2 -p 20 -x $REFERENCE/grch38/genome -1 sample_1.fastq -2 sample_2.fastq -S ALIGN/sample_aligned.sam
+"hisat2 -p 20 -x $REFERENCE/grch38/genome -1 sample_1.fastq -2 sample_2.fastq -S ALIGN/sample_aligned.sam"
 
+## Loop over all samples:
 
-# Loop over all samples:
-
-for fq1 in $FASTQ/*_1.fastq; do
+"for fq1 in $FASTQ/*_1.fastq; do
     fq2=${fq1/_1.fastq/_2.fastq}
     base=$(basename $fq1 _1.fastq)
     hisat2 -p 20 -x $REFERENCE/grch38/genome -1 $fq1 -2 $fq2 -S $ALIGN/${base}_aligned.sam
-done
+done"
 
 # STEP 4 — SAM → BAM Conversion (SAMtools)
 
-# Convert, sort, and index:
+## Convert, sort, and index:
 
-for sam in $ALIGN/*_aligned.sam; do
+"for sam in $ALIGN/*_aligned.sam; do
     base=$(basename $sam _aligned.sam)
     samtools view -@ 20 -bS $sam | samtools sort -@ 20 -o $BAM/${base}_sorted.bam
     samtools index $BAM/${base}_sorted.bam
-done
+done"
 
 # STEP 5 — Read Counting (featureCounts)
 
-featureCounts -T 20 -p -a $REFERENCE/Homo_sapiens.GRCh38.109.gtf -o $COUNTS/sample_counts.txt $BAM/sample_sorted.bam
-
+"featureCounts -S 2 -a Homo_sapiens.GRCh38.114.gtf -o quants/featurecounts.txt sample.bam"
 
 # Loop for all BAM files:
 
-for f in $BAM/*_sorted.bam; do
+"for f in $BAM/*_sorted.bam; do
     featureCounts -T 20 -p -a $REFERENCE/Homo_sapiens.GRCh38.109.gtf -o $COUNTS/$(basename ${f%_sorted.bam})_counts.txt "$f"
-done
+done"
 
-🧬 FINAL — Merge All Count Files
-mkdir MERGED_COUNTS
+## FINAL — Merge All Count Files
 
-awk 'NR>1 {print $1}' $COUNTS/SRR11262284_counts.txt > MERGED_COUNTS/geneids.txt
+"mkdir MERGED_COUNTS"
 
-for f in $COUNTS/*_counts.txt; do
+"awk 'NR>1 {print $1}' $COUNTS/SRR11262284_counts.txt > MERGED_COUNTS/geneids.txt"
+
+"for f in $COUNTS/*_counts.txt; do
     sample=$(basename "$f" _counts.txt)
     awk 'NR>1 {print $7}' "$f" > MERGED_COUNTS/${sample}_col.txt
-done
+done"
 
-paste MERGED_COUNTS/geneids.txt MERGED_COUNTS/*_col.txt > MERGED_COUNTS/merged_counts.txt
+"paste MERGED_COUNTS/geneids.txt MERGED_COUNTS/*_col.txt > MERGED_COUNTS/merged_counts.txt"
 
 # Downstream Analysis — DESeq2 in R
 
-* This section covers:
+This section covers:
 
 * Importing count matrix
 
@@ -268,11 +262,6 @@ paste MERGED_COUNTS/geneids.txt MERGED_COUNTS/*_col.txt > MERGED_COUNTS/merged_c
 * PCA / heatmap / volcano plot
 
 * GO/KEGG enrichment
-
-Example (add your plots later):
-
-💡 Add screenshot here: (DESeq2 PCA plot)
-<!-- INSERT SCREENSHOT 6 HERE -->
 
 # Differential Expression Analysis (DESeq2)
 
@@ -285,9 +274,7 @@ BiocManager::install("DESeq2")
 BiocManager::install("clusterProfiler")
 BiocManager::install("org.Hs.eg.db")
 
-
-(Continue with your DESeq2 script...)
-
+Run - 
 # End of Tutorial
 
 This README provides a full, reproducible workflow for bulk RNA-seq—from raw FASTQ files to biological interpretation of differentially expressed genes.
