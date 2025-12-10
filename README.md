@@ -145,6 +145,11 @@ Run the following command as follows
 
 "fastq-dump --outdir fastq --gzip --skip-technical --readids --read-filter pass --dumpbase --split-3 --clip SRR7179504.sra"
 
+we will see this verbose after running fastq dump command
+
+<img width="609" height="98" alt="Screenshot 2025-12-10 at 11 37 47 PM" src="https://github.com/user-attachments/assets/24849d64-ebc4-4a43-963b-2eea680c455a" />
+
+
 These are NCBI SRA Toolkit commands for downloading sequencing data.
 
 "cd fastq"
@@ -176,7 +181,7 @@ we should see files like:
 
 If we see all 20 samples → we are READY for the workshop.
 
-# Quality Control (FastQC + MultiQC)
+## Quality Control (FastQC + MultiQC)
 
 ## Step 1: Run FastQC:
 
@@ -190,7 +195,7 @@ This will give u html files for each of ur fastq.gz but we need one file for all
 
 For trimming, we use trimmomatic (installation of which is challenging - try installing it by ur own - hint (githubs links) and run the below command just for one sample
 
-# STEP 2 — Trimming (Trimmomatic)
+## STEP 2 — Trimming (Trimmomatic)
 
 "java -jar Trimmomatic-0.39/trimmomatic-0.39.jar SE -threads 4 fastq/SRR7179504.fastq.gz fastq/SRR7179504_trimmed.fastq.gz TRAILING:10 -phred33"   
 
@@ -203,34 +208,26 @@ After trimming, run FastQC again to compare metrics.
 "wget https://genome-idx.s3.amazonaws.com/hisat/grch38_genome.tar.gz"
 "tar -xvzf grch38_genome.tar.gz"
 
-## Download GTF annotation:
+"sudo apt install hisat2"
+"sudo apt install samtools"
 
-"wget -P $REFERENCE https://ftp.ensembl.org/pub/release-109/gtf/homo_sapiens/Homo_sapiens.GRCh38.109.gtf.gz"
-"gunzip Homo_sapiens.GRCh38.109.gtf.gz"
+"hisat2 -q -x grch38/genome -U fastq/sample1.fastq.gz | samtools sort -o sample1.bam | samtools index sample1.bam"
 
-## Single sample:
+## try this (will take like 20-25 mins)  ## single sample command
 
-"hisat2 -p 20 -x $REFERENCE/grch38/genome -1 sample_1.fastq -2 sample_2.fastq -S ALIGN/sample_aligned.sam"
-
-## Loop over all samples:
-
-"for fq1 in $FASTQ/*_1.fastq; do
-    fq2=${fq1/_1.fastq/_2.fastq}
-    base=$(basename $fq1 _1.fastq)
-    hisat2 -p 20 -x $REFERENCE/grch38/genome -1 $fq1 -2 $fq2 -S $ALIGN/${base}_aligned.sam
-done"
-
-# STEP 4 — SAM → BAM Conversion (SAMtools)
-
-## Convert, sort, and index:
-
-"for sam in $ALIGN/*_aligned.sam; do
-    base=$(basename $sam _aligned.sam)
-    samtools view -@ 20 -bS $sam | samtools sort -@ 20 -o $BAM/${base}_sorted.bam
-    samtools index $BAM/${base}_sorted.bam
-done"
+Now Make a .sh script of the code given below and run ./script_name.sh (this will automate all the alignment process)
 
 # STEP 5 — Read Counting (featureCounts)
+
+As a result, we will see 8 .bam and 8 corresponding .bai files
+
+Homo_sapiens.GRCh38.99.gtf.gz ← given in the tutorial; u need to download the latest version
+
+featureCounts -S 2 -a Homo_sapiens.GRCh38.114.gtf -o quants/featurecounts.txt sample.bam  ## to get counts for from .bam file
+
+Edit below chunk with ur directories n make it .sh file and simply run
+./script_name.sh  (this will automate estimation of counts by featurecounts taking each .bam)
+
 
 "featureCounts -S 2 -a Homo_sapiens.GRCh38.114.gtf -o quants/featurecounts.txt sample.bam"
 
