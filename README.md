@@ -302,3 +302,7 @@ Run the R script - "DESeq2_tutorial_GSE106305_Updated.Rmd" @RStudio and generate
 # End of Tutorial
 
 This README provides a full, reproducible workflow for bulk RNA-seq—from raw FASTQ files to biological interpretation of differentially expressed genes.
+
+## Acknowledgements
+
+I would like to acknowledge **Smriti Arora** for conducting the workshop that guided the development of this RNA-seq analysis pipeline.
