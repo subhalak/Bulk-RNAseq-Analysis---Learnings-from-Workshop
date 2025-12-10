@@ -43,7 +43,6 @@ The workflow covers the two major phases of RNA-seq analysis:
 
 This repository also contains a step-by-step guide for installing required tools, running commands, organizing output files, and performing DESeq2 analysis in R.
 
-
 ## Important Note: Computational requirements to download ~20 FASTQ files?
 
 * Downloading FASTQ files depends on file size, not CPU.
@@ -87,12 +86,27 @@ The processing pipeline includes:
 
 Before running the pipeline, create a dedicated conda environment to ensure consistent versions and reproducible results.
 
-conda create -n rnaseq_env python=3.10
-conda activate rnaseq_env
+— Install Miniconda (safe, no admin required)
+
+"curl -LO https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh"
+"bash Miniconda3-latest-MacOSX-arm64.sh"
+
+- Check installation:
+
+"conda --version"
+
+- Create a new environment for the workshop
+
+"conda create -n rnaseq python=3.10 -y"
+"conda activate rnaseq"
+
+- Install SRA Toolkit
+
+"conda install -c bioconda sra-tools -y"
 
 ## Install all required RNA-seq tools:
 
-conda install -y -c conda-forge -c bioconda fastqc multiqc trimmomatic hisat2 samtools subread
+conda install -y -c conda-forge -c bioconda fastqc multiqc trimmomatic hisat2 samtools subread 
 
 ## Tools included:
 
@@ -114,20 +128,53 @@ Subread (featureCounts): Gene-level quantification
 
 ## Organize your working directory:
 
-mkdir -p BulkTranscriptomics/{FASTQ,FASTQC_Results,TRIMMED,ALIGN,BAM,REFERENCE,COUNTS}
+Run the following command as follows
+
+"mkdir rnaseq"
+"cd rnaseq"
+"mkdir fastq"
 
 # PART C — Downloading GEO Datasets (SRA)
 
 ## Install SRA Toolkit:
 
-sudo apt install sra-toolkit
-prefetch SRR7179504
+"sudo apt install sra-toolkit"
+"prefetch SRR7179504"
 
 ## Download FASTQ files using fasterq-dump:
 
-fastq-dump --outdir fastq --gzip --skip-technical --readids --read-filter pass --dumpbase --split-3 --clip SRR7179504.sra
+"fastq-dump --outdir fastq --gzip --skip-technical --readids --read-filter pass --dumpbase --split-3 --clip SRR7179504.sra"
 
 These are NCBI SRA Toolkit commands for downloading sequencing data.
+
+"cd fastq"
+
+- Download all 20 .sra files
+
+- Convert them into 20 FASTQ files (.fastq.gz) inside your fastq/ folder using "python3 file_name.py"
+
+Note: 
+
+- prefetch SRRxxxx → download files
+
+- fastq-dump → convert .sra to .fastq.gz
+
+## Typical size:
+
+- Each .sra file: ~1–3 GB
+
+- After converting to fastq: ~1–5 GB per sample
+
+## To verify: 
+
+"ls fastq"
+
+You should see files like:
+
+SRR7179504_1.fastq.gz
+SRR7179504_2.fastq.gz
+
+If you see all 20 samples → you are READY for the workshop.
 
 # PART D — Downloading Reference Genome & Annotation Files
 
