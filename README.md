@@ -1,31 +1,18 @@
 # Bulk RNAseq Analysis - Learnings from Workshop
 
 
-# A Complete Reproducible Tutorial / Hands-On Workshop
+## A Complete Reproducible Tutorial / Hands-On Workshop
 
 RNA-seq (RNA sequencing) is a powerful and widely used method to study the transcriptome—the full set of RNA molecules expressed in a given cell type under specific biological conditions. Unlike traditional microarrays, RNA-seq provides a high-resolution, quantitative, and unbiased view of gene expression, enabling the discovery of differentially expressed genes, detection of novel transcripts, alternative splicing, and more.
 
 This repository provides a fully reproducible workflow for Bulk RNA-Seq processing, beginning with raw FASTQ files and ending with a complete count matrix ready for downstream analyses.
 
-# Workflow diagram on Bulk RNA seq analysis
-
-Here, we re-process 20 RNA-seq samples publicly available under GSE106305.
-
-The goal: convert raw sequencing data (SRA) → FASTQ → QC → trimmed reads → aligned BAM → gene-level counts → merged count matrix → DESeq2
-
-<img width="250" height="400" alt="Workflow_diagram" src="https://github.com/user-attachments/assets/185f46cc-3350-47eb-ac63-54bf2e16a938" />
-
-
-The workflow covers the two major phases of RNA-seq analysis:
-
-# 1. Data preprocessing — converting raw sequencing reads into a count matrix
-# 2. Downstream statistical analysis — differential expression, visualization, and biological interpretation
-
-This repository also contains a step-by-step guide for installing required tools, running commands, organizing output files, and performing DESeq2 analysis in R.
-
 # Bulk RNA-seq Processing Pipeline — Guo et al., 2019 (GEO dataset ID: GSE106305)
 
 A fully reproducible hands-on workflow for processing raw FASTQ → aligned BAM → gene counts → final count matrix using 20 RNA-seq samples (SRR7179504–SRR7179541) from:
+
+<img width="800" height="500" alt="Screenshot 2025-12-10 at 9 34 49 PM" src="https://github.com/user-attachments/assets/4af987ca-654f-468b-b7a1-76c3d1fe4ab1" />
+
 
 This tutorial is inspired by the study by Guo et al. (2019), “ONECUT2 is a driver of neuroendocrine prostate cancer,” published in Nature Communications
 🔗 https://www.nature.com/articles/s41467-019-11579-6
@@ -42,6 +29,23 @@ For this workshop, we demonstrate the workflow using a publicly accessible GEO d
 
 💡 Add screenshot here: (directory structure after creation)
 <!-- INSERT SCREENSHOT 2 HERE -->
+
+
+## Workflow diagram on Bulk RNA seq analysis
+
+Here, we re-process 20 RNA-seq samples publicly available under GSE106305.
+
+The goal: convert raw sequencing data (SRA) → FASTQ → QC → trimmed reads → aligned BAM → gene-level counts → merged count matrix → DESeq2
+
+<img width="250" height="400" alt="Workflow_diagram" src="https://github.com/user-attachments/assets/185f46cc-3350-47eb-ac63-54bf2e16a938" />
+
+The workflow covers the two major phases of RNA-seq analysis:
+
+## 1. Data preprocessing — converting raw sequencing reads into a count matrix
+## 2. Downstream statistical analysis — differential expression, visualization, and biological interpretation
+
+This repository also contains a step-by-step guide for installing required tools, running commands, organizing output files, and performing DESeq2 analysis in R.
+
 
 # Methods Overview
 
