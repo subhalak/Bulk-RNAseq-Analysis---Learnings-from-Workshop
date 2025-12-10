@@ -44,7 +44,24 @@ The workflow covers the two major phases of RNA-seq analysis:
 This repository also contains a step-by-step guide for installing required tools, running commands, organizing output files, and performing DESeq2 analysis in R.
 
 
-# 1. Data preprocessing - Methods Overview:
+## Important Note: Computational requirements to download ~20 FASTQ files?
+
+* Downloading FASTQ files depends on file size, not CPU.
+
+* Typical size per RNA-seq sample:
+
+--Single-end: 1–3 GB
+
+--Paired-end: 3–8 GB
+
+* Public studies vary widely.
+
+--If you download 20 RNA-seq samples, expect:
+
+--Approx required storage - 40–120 GB (realistic range)
+--Plan for 150 GB free to be safe.
+
+## 1. Data preprocessing - Methods Overview:
 
 The processing pipeline includes:
 
@@ -58,7 +75,7 @@ The processing pipeline includes:
 
 * Gene-level quantification (featureCounts)
 
-# 2. Downstream statistical analysis:
+## 2. Downstream statistical analysis:
 
 * Differential Expression Analysis (DESeq2)
 
@@ -73,11 +90,11 @@ Before running the pipeline, create a dedicated conda environment to ensure cons
 conda create -n rnaseq_env python=3.10
 conda activate rnaseq_env
 
-# Install all required RNA-seq tools:
+## Install all required RNA-seq tools:
 
 conda install -y -c conda-forge -c bioconda fastqc multiqc trimmomatic hisat2 samtools subread
 
-# Tools included:
+## Tools included:
 
 SRA Toolkit: command-line tools from NCBI for accessing the Sequence Read Archive (SRA) using prefetch, fastq-dump, fasterq-dump etc
 
@@ -95,7 +112,7 @@ Subread (featureCounts): Gene-level quantification
 
 # PART B — Creating Directory Structure
 
-# Organize your working directory:
+## Organize your working directory:
 
 mkdir -p BulkTranscriptomics/{FASTQ,FASTQC_Results,TRIMMED,ALIGN,BAM,REFERENCE,COUNTS}
 
@@ -106,28 +123,25 @@ mkdir -p BulkTranscriptomics/{FASTQ,FASTQC_Results,TRIMMED,ALIGN,BAM,REFERENCE,C
 sudo apt install sra-toolkit
 prefetch SRR7179504
 
-# Download FASTQ files using fasterq-dump:
+## Download FASTQ files using fasterq-dump:
 
 fastq-dump --outdir fastq --gzip --skip-technical --readids --read-filter pass --dumpbase --split-3 --clip SRR7179504.sra
 
 These are NCBI SRA Toolkit commands for downloading sequencing data.
 
-
-
 # PART D — Downloading Reference Genome & Annotation Files
 
-# Download HISAT2 GRCh38 index:
+## Download HISAT2 GRCh38 index:
 
 wget -P $REFERENCE https://genome-idx.s3.amazonaws.com/hisat/grch38_genome.tar.gz
 tar -xzf grch38_genome.tar.gz
 
-
-# Download GTF annotation:
+## Download GTF annotation:
 
 wget -P $REFERENCE https://ftp.ensembl.org/pub/release-109/gtf/homo_sapiens/Homo_sapiens.GRCh38.109.gtf.gz
 gunzip Homo_sapiens.GRCh38.109.gtf.gz
 
-# STEP 1 — Quality Control (FastQC + MultiQC)
+##STEP 1 — Quality Control (FastQC + MultiQC)
 
 # Run FastQC:
 
