@@ -1,4 +1,4 @@
-# Bulk-RNAseq-Analysis - Learnings-from-Workshop
+# Bulk RNAseq Analysis - Learnings from Workshop
 
 
 # A Complete Reproducible Tutorial / Hands-On Workshop
