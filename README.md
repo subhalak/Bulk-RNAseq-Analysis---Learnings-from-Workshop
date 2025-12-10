@@ -47,23 +47,23 @@ For this workshop, we demonstrate the workflow using a publicly accessible GEO d
 
 The processing pipeline includes:
 
-## * Quality control (FastQC, MultiQC)
+* Quality control (FastQC, MultiQC)
 
-## * Adapter/quality trimming (Trimmomatic)
+* Adapter/quality trimming (Trimmomatic)
 
-## * Alignment to reference genome (HISAT2)
+* Alignment to reference genome (HISAT2)
 
-## * SAM/BAM conversion & indexing (SAMtools)
+* SAM/BAM conversion & indexing (SAMtools)
 
-## * Gene-level quantification (featureCounts)
+* Gene-level quantification (featureCounts)
 
 # Downstream analysis includes:
 
-## * Differential Expression Analysis (DESeq2)
+* Differential Expression Analysis (DESeq2)
 
-## * PCA plots, heatmaps, volcano plots
+* PCA plots, heatmaps, volcano plots
 
-## * Functional enrichment (GO, KEGG, GSEA)
+* Functional enrichment (GO, KEGG, GSEA)
 
 💡 Add screenshot here: (PCA plot / heatmap / volcano plot)
 <!-- INSERT SCREENSHOT 3 HERE -->
