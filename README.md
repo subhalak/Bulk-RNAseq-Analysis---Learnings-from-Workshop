@@ -7,7 +7,7 @@ RNA-seq (RNA sequencing) is a powerful and widely used method to study the trans
 
 This repository provides a fully reproducible workflow for Bulk RNA-Seq processing, beginning with raw FASTQ files and ending with a complete count matrix ready for downstream analyses.
 
-# Bulk RNA-seq Processing Pipeline — Guo et al., 2019 (GEO dataset ID: GSE106305)
+## Bulk RNA-seq Processing Pipeline — Guo et al., 2019 (GEO dataset ID: GSE106305)
 
 A fully reproducible hands-on workflow for processing raw FASTQ → aligned BAM → gene counts → final count matrix using 20 RNA-seq reads from 8 individual samples (SRR7179504–SRR7179541) from:
 
