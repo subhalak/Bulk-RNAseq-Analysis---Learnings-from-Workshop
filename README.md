@@ -9,11 +9,6 @@ This repository provides a fully reproducible workflow for Bulk RNA-Seq processi
 
 ## Bulk RNA-seq Processing Pipeline — Guo et al., 2019 (GEO dataset ID: GSE106305)
 
-A fully reproducible hands-on workflow for processing raw FASTQ → aligned BAM → gene counts → final count matrix using 20 RNA-seq reads from 8 individual samples (SRR7179504–SRR7179541) from:
-
-<img width="800" height="500" alt="Screenshot 2025-12-10 at 9 34 49 PM" src="https://github.com/user-attachments/assets/4af987ca-654f-468b-b7a1-76c3d1fe4ab1" />
-
-
 This tutorial is inspired by the study by Guo et al. (2019), “ONECUT2 is a driver of neuroendocrine prostate cancer,” published in Nature Communications
 🔗 https://www.nature.com/articles/s41467-019-11579-6
 
@@ -21,11 +16,15 @@ The study identifies ONECUT2 as a key transcription factor driving neuroendocrin
 
 Note: The original analysis integrates transcriptomic profiling across multiple prostate cancer states.
 
-# Dataset Description
+A fully reproducible hands-on workflow for processing raw FASTQ → aligned BAM → gene counts → final count matrix using 20 RNA-seq reads from 8 individual samples (SRR7179504–SRR7179541) from:
+
+<img width="800" height="500" alt="Screenshot 2025-12-10 at 9 34 49 PM" src="https://github.com/user-attachments/assets/4af987ca-654f-468b-b7a1-76c3d1fe4ab1" />
+
+## Dataset Description
 
 Guo et al. utilize multiple publicly available and experimentally generated datasets, including RNA-seq, ChIP-seq, ATAC-seq, and additional prostate cancer transcriptomic datasets from GEO and dbGaP. These datasets include bulk RNA-seq profiles of tumor samples, cell lines, and PDX models.
 
-For this workshop, we demonstrate the workflow using a publicly accessible GEO dataset (Accession ID: GSE106305) containing multiple RNA-seq samples across biological conditions. Raw sequencing data are downloaded via SRA Toolkit, and all files are stored in structured directories for reproducibility.
+For this workshop, we demonstrate the workflow using a publicly accessible GEO dataset (Accession ID: [GSE106305](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE106305)) containing multiple RNA-seq samples across biological conditions. Raw sequencing data are downloaded via SRA Toolkit, and all files are stored in structured directories for reproducibility.
 
 # Introduction
 
@@ -33,7 +32,7 @@ For this workshop, we demonstrate the workflow using a publicly accessible GEO d
 
 Here, we re-process 20 RNA-seq samples publicly available under GSE106305.
 
-The goal: convert raw sequencing data (SRA) → FASTQ → QC → trimmed reads → aligned BAM → gene-level counts → merged count matrix → DESeq2
+The goal: convert raw sequencing data (SRA) → FASTQ → QC → trimmed reads → QC again → Mapping → aligned BAM → gene-level counts → merged count matrix → DESeq2 → GSEA 
 
 <img width="250" height="400" alt="Workflow_diagram" src="https://github.com/user-attachments/assets/185f46cc-3350-47eb-ac63-54bf2e16a938" />
 
@@ -45,7 +44,7 @@ The workflow covers the two major phases of RNA-seq analysis:
 This repository also contains a step-by-step guide for installing required tools, running commands, organizing output files, and performing DESeq2 analysis in R.
 
 
-# Methods Overview
+# 1. Data preprocessing - Methods Overview:
 
 The processing pipeline includes:
 
@@ -59,16 +58,13 @@ The processing pipeline includes:
 
 * Gene-level quantification (featureCounts)
 
-# Downstream analysis includes:
+# 2. Downstream statistical analysis:
 
 * Differential Expression Analysis (DESeq2)
 
 * PCA plots, heatmaps, volcano plots
 
-* Functional enrichment (GO, KEGG, GSEA)
-
-💡 Add screenshot here: (PCA plot / heatmap / volcano plot)
-<!-- INSERT SCREENSHOT 3 HERE -->
+* Pathway & Functional enrichment (ClusterProfiler, GSEA, Reactome, KEGG)
 
 # PART A — Conda Environment Setup
 
@@ -79,11 +75,15 @@ conda activate rnaseq_env
 
 # Install all required RNA-seq tools:
 
-conda install -y -c bioconda fastqc multiqc trimmomatic hisat2 samtools subread
+conda install -y -c conda-forge -c bioconda fastqc multiqc trimmomatic hisat2 samtools subread
 
 # Tools included:
 
+SRA Toolkit: command-line tools from NCBI for accessing the Sequence Read Archive (SRA) using prefetch, fastq-dump, fasterq-dump etc
+
 FastQC: Assess quality of raw FASTQ reads
+
+MultiQC: aggregates and summarizes output from many different analysis tools like FastQC
 
 Trimmomatic: Trim adapters & low-quality bases
 
@@ -99,25 +99,20 @@ Subread (featureCounts): Gene-level quantification
 
 mkdir -p BulkTranscriptomics/{FASTQ,FASTQC_Results,TRIMMED,ALIGN,BAM,REFERENCE,COUNTS}
 
-
-💡 Add screenshot here: (tree view of project directories)
-<!-- INSERT SCREENSHOT 4 HERE -->
-
 # PART C — Downloading GEO Datasets (SRA)
 
-# Install SRA Toolkit:
+## Install SRA Toolkit:
 
-conda install -c bioconda sra-tools=3.0.7
-
+sudo apt install sra-toolkit
+prefetch SRR7179504
 
 # Download FASTQ files using fasterq-dump:
 
-fasterq-dump SRR123456 SRR123457 --threads 10 --progress --split-files
+fastq-dump --outdir fastq --gzip --skip-technical --readids --read-filter pass --dumpbase --split-3 --clip SRR7179504.sra
+
+These are NCBI SRA Toolkit commands for downloading sequencing data.
 
 
-# Or download many files at once with GNU Parallel:
-
-parallel -j 2 'fasterq-dump {} --threads 4 --split-files --progress -O $FASTQ' ::: $(cat srr_list.txt)
 
 # PART D — Downloading Reference Genome & Annotation Files
 
