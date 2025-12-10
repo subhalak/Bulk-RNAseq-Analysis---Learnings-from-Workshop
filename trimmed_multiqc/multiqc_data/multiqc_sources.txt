@@ -1,0 +1,9 @@
+Module	Section	Sample Name	Source
+FastQC	all_sections	LNCAP_Hypoxia_S1	/Users/subhalakshmi/rnaseq_project/trimmed_fastqc/LNCAP_Hypoxia_S1_trimmed_fastqc.zip
+FastQC	all_sections	LNCAP_Hypoxia_S2	/Users/subhalakshmi/rnaseq_project/trimmed_fastqc/LNCAP_Hypoxia_S2_trimmed_fastqc.zip
+FastQC	all_sections	LNCAP_Normoxia_S1	/Users/subhalakshmi/rnaseq_project/trimmed_fastqc/LNCAP_Normoxia_S1_trimmed_fastqc.zip
+FastQC	all_sections	LNCAP_Normoxia_S2	/Users/subhalakshmi/rnaseq_project/trimmed_fastqc/LNCAP_Normoxia_S2_trimmed_fastqc.zip
+FastQC	all_sections	PC3_Hypoxia_S1	/Users/subhalakshmi/rnaseq_project/trimmed_fastqc/PC3_Hypoxia_S1_trimmed_fastqc.zip
+FastQC	all_sections	PC3_Hypoxia_S2	/Users/subhalakshmi/rnaseq_project/trimmed_fastqc/PC3_Hypoxia_S2_trimmed_fastqc.zip
+FastQC	all_sections	PC3_Normoxia_S1	/Users/subhalakshmi/rnaseq_project/trimmed_fastqc/PC3_Normoxia_S1_trimmed_fastqc.zip
+FastQC	all_sections	PC3_Normoxia_S2	/Users/subhalakshmi/rnaseq_project/trimmed_fastqc/PC3_Normoxia_S2_trimmed_fastqc.zip
